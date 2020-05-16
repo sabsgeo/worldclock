@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:worldtime/services/world_time.dart';
+import 'package:worldtime/singletons/app_data.dart';
 
 class ChooseLocation extends StatefulWidget {
   @override
@@ -7,40 +8,30 @@ class ChooseLocation extends StatefulWidget {
 }
 
 class _ChooseLocationState extends State<ChooseLocation> {
-  List<WorldTime> locations = [];
 
   @override
   void initState() {
     super.initState();
   }
 
-  void updateTime(index) async {
-    WorldTime instance = locations[index];
+  Future<bool> updateTime(int index, BuildContext appContext) async {
+    WorldTime instance = appData.allWTLocations[index];
     await instance.timeDiffFromLocal();
     Map dayTime = await WorldTime.runRiseAndSet(
         instance.location.split('/')[instance.location.split('/').length - 1]);
-    Map timeInfo = WorldTime.getTime(instance.timeDiff);
-    Navigator.pop(context, {
-      'location': instance.location,
-      'flag': instance.flag,
-      'timeDiff': instance.timeDiff,
-      'dayTime': dayTime
-    });
+    if(appContext.toString().length > 14) {
+      Navigator.pop(appContext, {
+        'location': instance.location,
+        'flag': instance.flag,
+        'timeDiff': instance.timeDiff,
+        'dayTime': dayTime
+      });
+    }
+    return true;
   }
 
   @override
   Widget build(BuildContext context) {
-    Map allLocations = ModalRoute.of(context).settings.arguments;
-    allLocations['allTimeZone'].forEach((echItm) {
-      String countryCode = allLocations['allTimeZoneMap'][echItm];
-      locations.add(WorldTime(
-          url: echItm,
-          location: echItm
-              .toString()
-              .split('/')[echItm.toString().split('/').length - 1]
-              .replaceAll('_', ' '),
-          flag: countryCode));
-    });
     return Scaffold(
         backgroundColor: Colors.grey[200],
         appBar: AppBar(
@@ -50,20 +41,21 @@ class _ChooseLocationState extends State<ChooseLocation> {
           elevation: 0,
         ),
         body: ListView.builder(
-          itemCount: locations.length,
-          itemBuilder: (context, index) {
+          itemExtent: 70,
+          itemCount: appData.allWTLocations .length,
+          itemBuilder: (listContext, index) {
             return Padding(
               padding:
                   const EdgeInsets.symmetric(vertical: 1.0, horizontal: 4.0),
               child: Card(
                 child: ListTile(
-                  onTap: () {
-                    updateTime(index);
+                  onTap: () async {
+                    await updateTime(index, context);
                   },
-                  title: Text(locations[index].location),
+                  title: Text(appData.allWTLocations[index].location),
                   leading: CircleAvatar(
                     backgroundImage: NetworkImage(
-                        'https://www.countryflags.io/${locations[index].flag}/shiny/64.png'),
+                        'https://www.countryflags.io/${appData.allWTLocations[index].flag}/shiny/32.png'),
                     backgroundColor: Colors.transparent,
                   ),
                 ),

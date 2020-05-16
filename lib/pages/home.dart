@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:worldtime/services/world_time.dart';
-import 'package:intl/intl.dart';
 import 'dart:async';
+import 'package:worldtime/singletons/app_data.dart';
+
 
 class Home extends StatefulWidget {
   @override
@@ -48,14 +49,7 @@ class _HomeState extends State<Home> {
           children: <Widget>[
             FlatButton.icon(
               onPressed: () async {
-                List<WorldTime> locations = [];
-                Map allTimeZoneMap = await WorldTime.getTimezoneToCountry();
-                List allTimeZone = await WorldTime.getAllTimeZone();
-                dynamic result = await Navigator.pushNamed(context, '/location',
-                    arguments: {
-                      'allTimeZone': allTimeZone,
-                      'allTimeZoneMap': allTimeZoneMap
-                    });
+                dynamic result = await Navigator.pushNamed(context, '/location');
                 setState(() {
                   timeData = result;
                 });

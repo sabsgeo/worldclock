@@ -3,6 +3,7 @@ import 'package:http/http.dart';
 import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:worldtime/singletons/app_data.dart';
 
 class WorldTime {
   String location;
@@ -16,10 +17,9 @@ class WorldTime {
   Future<void> timeDiffFromLocal() async {
     Map localDataTemp = await getLocalTime();
     String localData = localDataTemp['utc_offset'].toString();
-    Response requestTimeZoneInfo =
-        await get('http://worldtimeapi.org/api/timezone/$url');
-    String requestData =
-        jsonDecode(requestTimeZoneInfo.body)['utc_offset'].toString();
+    Map allCountry = await WorldTime.getTimezoneToCountry();
+    allCountry[this.url]['utc_offset'].toString();
+    String requestData = allCountry[this.url]['utc_offset'].toString();
 
     int localMulFactor = 1;
     int requestMulFactor = 1;
@@ -47,9 +47,13 @@ class WorldTime {
   }
 
   static Future<Map> getLocalTime() async {
-    Response currentLocalTimeZoneInfo =
-        await get('http://worldtimeapi.org/api/ip');
-    return jsonDecode(currentLocalTimeZoneInfo.body);
+    if (appData.localTimeInfo.isEmpty) {
+      print("getLocalTime");
+      Response currentLocalTimeZoneInfo =
+      await get('http://worldtimeapi.org/api/ip');
+      appData.localTimeInfo = jsonDecode(currentLocalTimeZoneInfo.body);
+    }
+    return appData.localTimeInfo;
   }
 
   static Map getTime(int timeDiffInSec) {
@@ -64,16 +68,24 @@ class WorldTime {
   }
 
   static Future<List> getAllTimeZone() async {
-    Map allTimeZone = await getTimezoneToCountry();
-    List data = allTimeZone.keys.toList();
-    data.sort((a, b) => a.toString().compareTo(b.toString()));
-    return data;
+    if (appData.allTimeZones.isEmpty) {
+      print("getAllTimeZone");
+      Map allTimeZone = await WorldTime.getTimezoneToCountry();
+      List data = allTimeZone.keys.toList();
+      data.sort((a, b) => a.toString().compareTo(b.toString()));
+      appData.allTimeZones = data;
+    }
+    return appData.allTimeZones;
   }
 
   static Future<Map> getTimezoneToCountry() async {
-    String jsonString =
-        await rootBundle.loadString('assets/timezone_to_country.json');
-    return json.decode(jsonString);
+    if (appData.timeZoneInfo.isEmpty) {
+      print("getTimezoneToCountry");
+      String jsonString =
+      await rootBundle.loadString('assets/timezone_to_country.json');
+      appData.timeZoneInfo = json.decode(jsonString);
+    }
+    return appData.timeZoneInfo;
   }
 
   static Future<Map> runRiseAndSet(placeName) async {
