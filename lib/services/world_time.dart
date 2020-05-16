@@ -14,8 +14,6 @@ class WorldTime {
   WorldTime({this.location, this.flag, this.url});
 
   Future<void> timeDiffFromLocal() async {
-    Response currentLocalTimeZoneInfo =
-        await get('http://worldtimeapi.org/api/ip');
     Map localDataTemp = await getLocalTime();
     String localData = localDataTemp['utc_offset'].toString();
     Response requestTimeZoneInfo =
