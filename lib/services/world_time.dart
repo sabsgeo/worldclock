@@ -48,7 +48,6 @@ class WorldTime {
 
   static Future<Map> getLocalTime() async {
     if (appData.localTimeInfo.isEmpty) {
-      print("getLocalTime");
       Response currentLocalTimeZoneInfo =
       await get('http://worldtimeapi.org/api/ip');
       appData.localTimeInfo = jsonDecode(currentLocalTimeZoneInfo.body);
@@ -69,7 +68,6 @@ class WorldTime {
 
   static Future<List> getAllTimeZone() async {
     if (appData.allTimeZones.isEmpty) {
-      print("getAllTimeZone");
       Map allTimeZone = await WorldTime.getTimezoneToCountry();
       List data = allTimeZone.keys.toList();
       data.sort((a, b) => a.toString().compareTo(b.toString()));
@@ -80,7 +78,6 @@ class WorldTime {
 
   static Future<Map> getTimezoneToCountry() async {
     if (appData.timeZoneInfo.isEmpty) {
-      print("getTimezoneToCountry");
       String jsonString =
       await rootBundle.loadString('assets/timezone_to_country.json');
       appData.timeZoneInfo = json.decode(jsonString);
@@ -94,7 +91,6 @@ class WorldTime {
     Map decodeData = jsonDecode(data.body)['astronomy']['astronomy'][0];
     List sunrise = decodeData['sunrise'].toString().split('AM')[0].split(':');
     List sunset = decodeData['sunset'].toString().split('PM')[0].split(':');
-
     return {
       'sunrise': {
         'hours': int.parse(sunrise[0]),

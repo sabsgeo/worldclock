@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:worldtime/services/world_time.dart';
 import 'package:worldtime/singletons/app_data.dart';
@@ -8,7 +10,7 @@ class ChooseLocation extends StatefulWidget {
 }
 
 class _ChooseLocationState extends State<ChooseLocation> {
-
+  bool pooping = false;
   @override
   void initState() {
     super.initState();
@@ -19,14 +21,12 @@ class _ChooseLocationState extends State<ChooseLocation> {
     await instance.timeDiffFromLocal();
     Map dayTime = await WorldTime.runRiseAndSet(
         instance.location.split('/')[instance.location.split('/').length - 1]);
-    if(appContext.toString().length > 14) {
-      Navigator.pop(appContext, {
-        'location': instance.location,
-        'flag': instance.flag,
-        'timeDiff': instance.timeDiff,
-        'dayTime': dayTime
-      });
-    }
+    Navigator.pop(appContext, {
+      'location': instance.location,
+      'flag': instance.flag,
+      'timeDiff': instance.timeDiff,
+      'dayTime': dayTime
+    });
     return true;
   }
 
@@ -42,7 +42,7 @@ class _ChooseLocationState extends State<ChooseLocation> {
         ),
         body: ListView.builder(
           itemExtent: 70,
-          itemCount: appData.allWTLocations .length,
+          itemCount: appData.allWTLocations.length,
           itemBuilder: (listContext, index) {
             return Padding(
               padding:
@@ -50,7 +50,10 @@ class _ChooseLocationState extends State<ChooseLocation> {
               child: Card(
                 child: ListTile(
                   onTap: () async {
-                    await updateTime(index, context);
+                    if (!this.pooping) {
+                      this.pooping = true;
+                      await updateTime(index, context);
+                    }
                   },
                   title: Text(appData.allWTLocations[index].location),
                   leading: CircleAvatar(
@@ -63,5 +66,10 @@ class _ChooseLocationState extends State<ChooseLocation> {
             );
           },
         ));
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }

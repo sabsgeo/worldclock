@@ -36,7 +36,7 @@ class _HomeState extends State<Home> {
         ? timeData
         : ModalRoute.of(context).settings.arguments;
     String bgImage = isDayTime ? 'day.png' : 'night.png';
-    Color bgColor = isDayTime ? Colors.blue : Colors.indigo[900];
+    Color bgColor = isDayTime ?  Color.fromRGBO(210, 241, 255, 1): Color.fromRGBO(6, 60, 102, 1);
     return Scaffold(
       backgroundColor: bgColor,
       body: SafeArea(
@@ -56,11 +56,11 @@ class _HomeState extends State<Home> {
               },
               icon: Icon(
                 Icons.edit_location,
-                color: Colors.grey[300],
+                color: Colors.black,
               ),
               label: Text(
                 'Choose location',
-                style: TextStyle(color: Colors.grey[300]),
+                style: TextStyle(color: Colors.black),
               ),
             ),
             SizedBox(height: 20.0),
@@ -76,7 +76,7 @@ class _HomeState extends State<Home> {
                 Text(
                   timeData['location'],
                   style: TextStyle(
-                      fontSize: 28.0, letterSpacing: 2.0, color: Colors.white),
+                      fontSize: 28.0, letterSpacing: 2.0, color: Colors.black),
                 )
               ],
             ),
@@ -87,16 +87,16 @@ class _HomeState extends State<Home> {
               children: <Widget>[
                 Text(
                   requestTimeInfo['requestTime'],
-                  style: TextStyle(fontSize: 45.0, color: Colors.white),
+                  style: TextStyle(fontSize: 45.0, color: Colors.black),
                 ),
                 Text(
                   requestTimeInfo['requestTimeSec'],
-                  style: TextStyle(fontSize: 25.0, color: Colors.white),
+                  style: TextStyle(fontSize: 25.0, color: Colors.black),
                   textAlign: TextAlign.center,
                 ),
                 Text(
                   requestTimeInfo['requestTimeDay'],
-                  style: TextStyle(fontSize: 45.0, color: Colors.white),
+                  style: TextStyle(fontSize: 45.0, color: Colors.black),
                 ),
               ],
             )

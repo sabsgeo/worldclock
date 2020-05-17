@@ -52,11 +52,23 @@ class _LoadingState extends State<Loading> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.blue[900],
-        body: Center(
-          child: SpinKitFoldingCube(
-            color: Colors.white,
-            size: 80.0,
+        body: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  stops: [
+                    0.5,
+                    0.5
+                  ],
+                  colors: [Color.fromRGBO(210, 241, 255, 1), Color.fromRGBO(6, 60, 102, 1)]),
+              image: DecorationImage(
+                  image: AssetImage('assets/day_night.png'), fit: BoxFit.cover)),
+          child: Center(
+            child: SpinKitFoldingCube(
+              color: Color.fromRGBO(0, 0, 0, .5),
+              size: 80.0,
+            ),
           ),
         ));
   }
