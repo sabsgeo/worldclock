@@ -70,7 +70,7 @@ class WorldTime {
     if (appData.allTimeZones.isEmpty) {
       Map allTimeZone = await WorldTime.getTimezoneToCountry();
       List data = allTimeZone.keys.toList();
-      data.sort((a, b) => a.toString().compareTo(b.toString()));
+      data.sort((a, b) => a.toString().split("/")[a.toString().split("/").length - 1].toString().compareTo(b.toString().split("/")[b.toString().split("/").length - 1].toString()));
       appData.allTimeZones = data;
     }
     return appData.allTimeZones;
